@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { getPost } from "@/lib/firebase/post/read";
 import { createNewPost, deletePost, updatePost } from "@/lib/firebase/post/write";
@@ -8,9 +8,7 @@ import { createContext, useContext, useState } from "react";
 const PostFormContext = createContext();
 
 export function PostFormContextProvider({ children }) {
-
     const router = useRouter();
-
 
     const [data, setData] = useState({});
     const [isLoading, setIsLoading] = useState(false);
@@ -19,12 +17,11 @@ export function PostFormContextProvider({ children }) {
     const [image, setImage] = useState(null);
 
     const handleData = (key, value) => {
-        setIsDone(false)
-        setData({
-            ...data,
+        setIsDone(false);
+        setData((prevData) => ({
+            ...prevData,
             [key]: value,
-        })
-
+        }));
     };
 
     const handleCreate = async () => {
@@ -32,26 +29,29 @@ export function PostFormContextProvider({ children }) {
         setIsLoading(true);
         setIsDone(false);
         try {
-            await createNewPost({ data: data, image: image });
+            await createNewPost({ data, image });
             setIsDone(true);
+            router.push(`/admin/posts`);
         } catch (error) {
-            setError(error?.message);
+            setError(error?.message || "Failed to create post");
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
-
 
     const handleUpdate = async () => {
         setError(null);
         setIsLoading(true);
         setIsDone(false);
         try {
-            await updatePost({ data: data, image: image });
+            await updatePost({ data, image });
             setIsDone(true);
-        } catch (error) { 
-            setError(error?.message);
+            router.push(`/admin/posts`);
+        } catch (error) {
+            setError(error?.message || "Failed to update post");
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     const handleDelete = async (id) => {
@@ -61,13 +61,13 @@ export function PostFormContextProvider({ children }) {
         try {
             await deletePost(id);
             setIsDone(true);
-            router.push(`/admin/posts`)
+            router.push(`/admin/posts`);
         } catch (error) {
-            setError(error?.message);
+            setError(error?.message || "Failed to delete post");
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
-
 
     const fetchData = async (id) => {
         setError(null);
@@ -77,17 +77,15 @@ export function PostFormContextProvider({ children }) {
             const res = await getPost(id);
             if (res.exists()) {
                 setData(res.data());
-
             } else {
-                throw new Error(`No Post found from id ${id}`)
+                throw new Error(`No post found for ID: ${id}`);
             }
-
         } catch (error) {
-            setError(error?.message);
+            setError(error?.message || "Failed to fetch post data");
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
-
-    }
+    };
 
     return (
         <PostFormContext.Provider
