@@ -1,6 +1,6 @@
 "use client"; 
 
-import { HomeIcon, List, MessageCircleMore } from 'lucide-react';
+import { HomeIcon, HopOff, List, MessageCircleMore } from 'lucide-react';
 import LoginButton from './LoginButton';
 import AuthContextProvider from '@/lib/contexts/AuthContext';
 import Link from 'next/link';
@@ -13,7 +13,9 @@ export default function Header() {
         <nav className="flex flex-wrap justify-between items-center px-7 py-3 border-b ">
             {/* Logo */}
             <Link href={'/'}>
-                <img className="h-10" src="./favicon.ico" alt="Logo" />
+
+            {/* <img className="h-10" src="./favicon.png" alt="Logo" /> */}
+            <HopOff/>
             </Link>
 
             {/* Mobile Menu Button */}
