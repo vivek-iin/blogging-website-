@@ -2,21 +2,21 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 import { getStorage } from 'firebase/storage';
+
 const firebaseConfig = {
-    apiKey: "AIzaSyAA6svClzRk2wdFedNbKhEIuxKXpgiVLpk",
-    authDomain: "prologue-blog.firebaseapp.com",
-    projectId: "prologue-blog",
-    storageBucket: "prologue-blog.appspot.com",
-    messagingSenderId: "288780393591",
-    appId: "1:288780393591:web:3066a87629cceeb418fa72",
-    measurementId: "G-14RFC9HX69"
-  };
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+};
 
 const app = initializeApp(firebaseConfig);
 
 let analytics;
 if (typeof window !== 'undefined') {
-    // Dynamic import for getAnalytics to ensure it runs only in client-side
     import("firebase/analytics").then(({ getAnalytics }) => {
         analytics = getAnalytics(app);
     });
